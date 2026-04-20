@@ -1,0 +1,4 @@
+notebooks/
+tests/
+__pycache__
+.venv
