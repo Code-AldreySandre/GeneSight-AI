@@ -3,10 +3,8 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-# Import our custom logger
 from src.utils.logger import get_logger
 
-# Initialize the logger for this specific module
 logger = get_logger(__name__)
 
 class DataProcessor:
@@ -30,18 +28,16 @@ class DataProcessor:
         logger.info("Flattening the data structure...")
         records = []
         
-        # Iterating through the hierarchy: syndrome_id -> subject_id -> image_id
         for syndrome_id, subjects in raw_data.items():
             for subject_id, images in subjects.items():
                 for image_id, embedding in images.items():
-                    
-                    # Data integrity check: ensure embedding is valid and has 320 dimensions
+            
                     if embedding is not None and len(embedding) == 320:
                         record = {
                             'syndrome_id': syndrome_id,
                             'subject_id': subject_id,
                             'image_id': image_id,
-                            'embedding': np.array(embedding) # Storing as a numpy array for efficiency
+                            'embedding': np.array(embedding) 
                         }
                         records.append(record)
                     else:

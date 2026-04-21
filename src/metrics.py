@@ -7,6 +7,7 @@ def calculate_f1_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Calculates the Macro F1-Score for multiclass classification.
     
+    
     Formula: F1 = 2 * (Precision * Recall) / (Precision + Recall)
     Macro-average calculates the metric independently for each class and then takes the average.
     """
