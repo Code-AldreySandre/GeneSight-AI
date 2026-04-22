@@ -33,16 +33,12 @@ def main(data_path: str):
         sys.exit(1)
 
     logger.info("Phase 1: Statistical Analysis and Data Quality")
-    df_raw = run_eda(str(file_path), figures_dir)
+    df = run_eda(str(file_path), figures_dir)
 
     logger.info("Phase 2: Processing and L2 Normalization")
     processor = DataProcessor(file_path=str(file_path))
-    raw_data = processor.load_data()
-    df = processor.flatten_data(raw_data)
-    
-    if hasattr(processor, 'treat_embeddings'):
-        df = processor.treat_embeddings(df)
-        logger.info("Embedding processing completed.")
+    df = processor.treat_embeddings(df)
+    logger.info("Embedding processing completed.")    
     
     logger.info("Phase 3: Cluster Visualization")
     plot_tsne(df, save_dir=figures_dir)

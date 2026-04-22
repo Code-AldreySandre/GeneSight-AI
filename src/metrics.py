@@ -20,11 +20,9 @@ def calculate_f1_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
         fp = np.sum((y_true != cls) & (y_pred == cls))
         fn = np.sum((y_true == cls) & (y_pred != cls))
         
-        # Calculo do Precision e do recall para a classe atual ;-;
         precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
         
-        # Calculo do F1-score pra classe atual
         if precision + recall > 0:
             f1 = 2 * (precision * recall) / (precision + recall)
         else:
@@ -59,35 +57,3 @@ def calculate_top_k_accuracy(y_true: np.ndarray, y_pred_rankings: np.ndarray, k:
     logger.info(f"Calculated Top {k} Accuracy: {top_k_acc:.4f}")
     return float(top_k_acc)
 
-def calculate_roc_curve_and_auc(y_true_binary: np.ndarray, y_scores: np.ndarray):
-    """
-    Manually calculates the ROC Curve (FPR, TPR) and the AUC
-    using the Trapezoidal rule for a binary array
-    
-    Args:
-        y_true_binary: 1D array of binary labels (0 or 1).
-        y_scores: 1D array of predicted scores/probabilities.
-        
-    Returns:
-        tuple: (fpr_array, tpr_array, auc_score)
-    """
-    desc_score_indices = np.argsort(y_scores)[::-1]
-    y_scores_sorted = y_scores[desc_score_indices]
-    y_true_sorted = y_true_binary[desc_score_indices]
-    
-    distinct_value_indices = np.where(np.diff(y_scores_sorted) != 0)[0]
-    threshold_idxs = np.r_[distinct_value_indices, y_true_sorted.size - 1]
-    
-    tps = np.cumsum(y_true_sorted)[threshold_idxs]
-    fps = np.cumsum(1 - y_true_sorted)[threshold_idxs]
-    tps = np.r_[0, tps]
-    fps = np.r_[0, fps]
-    
-    positives = tps[-1]
-    negatives = fps[-1]
-    
-    tpr = tps / positives if positives > 0 else np.zeros_like(tps)
-    fpr = fps / negatives if negatives > 0 else np.zeros_like(fps)
-
-    auc_score = np.trapz(tpr, fpr)
-    return fpr, tpr, auc_score

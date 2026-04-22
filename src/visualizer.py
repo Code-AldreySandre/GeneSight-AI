@@ -11,44 +11,6 @@ from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-def plot_syndrome_distribution(df: pd.DataFrame, save_dir: Path):
-
-    """Plots the class distribution of syndromes."""
-
-    logger.info("Generating syndrome distribution plot...")
-    plt.figure(figsize=(12, 6))
-    
-    order = df['syndrome_id'].value_counts().index
-    sns.countplot(data=df, x='syndrome_id', order=order, palette='viridis')
-    
-    plt.title('Image Distribution per Genetic Syndrome', fontsize=14, pad=15)
-    plt.xlabel('Syndrome ID', fontsize=12)
-    plt.ylabel('Number of Images', fontsize=12)
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    
-    plt.savefig(save_dir / 'eda_syndrome_distribution.png', dpi=300)
-    plt.close()
-
-def plot_embedding_magnitudes(df: pd.DataFrame, save_dir: Path):
-
-    """Plots the distribution of L2 norms to visualize outliers."""
-
-    logger.info("Plotting embedding magnitudes (L2 Norm)...")
-    plt.figure(figsize=(10, 6))
-    
-    sns.histplot(df['embedding_norm'], bins=50, kde=True, color='crimson')
-    
-    plt.title('Distribution of Embedding Magnitudes (Outlier Detection)', fontsize=14, pad=15)
-    plt.xlabel('Vector Magnitude', fontsize=12)
-    plt.ylabel('Frequency', fontsize=12)
-    plt.axvline(df['embedding_norm'].mean(), color='black', linestyle='dashed', linewidth=2, label='Mean')
-    
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(save_dir/'eda_outliers_detection.png', dpi=300)
-    plt.close()
-
 def plot_tsne(df: pd.DataFrame, save_dir: Path):
 
     """Applies t-SNE to reduce embedding dimensionality to 2D and plots the result."""

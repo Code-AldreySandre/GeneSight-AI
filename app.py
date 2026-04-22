@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 from PIL import Image
+import os
 import io
 import time
 
@@ -43,9 +44,8 @@ def main():
                 processor = DataProcessor(file_path=str(temp_path))
                 raw_data = processor.load_data()
                 df = processor.flatten_data(raw_data)
-                if hasattr(processor, 'treat_embeddings'):
-                    df = processor.treat_embeddings(df)
-                
+                df = processor.treat_embeddings(df)
+
                 st.write("Generating t-SNE Clusters...")
                 plot_tsne(df, save_dir=figures_dir)
                 
@@ -64,6 +64,9 @@ def main():
                 plot_metrics_evolution(csv_path, figures_dir)
                 
                 status.update(label="Pipeline Completed!", state="complete", expanded=False)
+                if temp_path.exists():
+                    os.remove(temp_path)
+                
             
             st.success("Analysis ready! Explore the tabs below.")
 

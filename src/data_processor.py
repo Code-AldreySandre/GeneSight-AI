@@ -58,3 +58,13 @@ class DataProcessor:
         }
         logger.info(f"EDA Stats: {stats['unique_syndromes']} syndromes found across {stats['total_images']} images.")
         return stats
+    
+    def treat_embeddings(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Applies L2 normalization to the embedding vectors."""
+        logger.info("Applying L2 normalization to embeddings...")
+        norms = np.linalg.norm(np.vstack(df['embedding'].values), axis=1, keepdims=True)
+        normalized = np.vstack(df['embedding'].values) / np.where(norms == 0, 1, norms)
+        df = df.copy()
+        df['embedding'] = list(normalized)
+        logger.info("L2 normalization completed.")
+        return df

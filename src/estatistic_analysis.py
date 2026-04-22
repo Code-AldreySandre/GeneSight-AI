@@ -54,6 +54,7 @@ def run_eda(data_path: str, save_dir: Path):
     plt.close()
     
     logger.info("--- EDA completed successfully! Plots saved in 'results/figures' ---")
+    return df
 
 if __name__ == "__main__":
     # Paths relative to the project root
